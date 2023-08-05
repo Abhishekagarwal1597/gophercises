@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+	"time"
 )
 
 func main() {
@@ -36,9 +37,13 @@ func main() {
 	input_chan := make(chan string)
 	var pos, neg int
 
+	// Calling NewTimer method
+	newtimer := time.NewTimer(30 * time.Second)
+
 	for key, value := range data {
 
-		fmt.Printf("Your %d question:\n", key+1)
+		fmt.Printf("Your %dth question:\n", key+1)
+		fmt.Println(value[0])
 		var user_input int
 
 		go func() {
@@ -58,6 +63,10 @@ func main() {
 		case <-terminateSignal():
 			fmt.Println("channel terminated")
 			os.Exit(1)
+
+		case <-newtimer.C:
+			fmt.Println("time exhasted..terminating")
+			break
 		}
 
 	}
